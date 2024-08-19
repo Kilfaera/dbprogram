@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"ferryapp/cmd"
-	"ferryapp/servicios"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -27,12 +26,5 @@ func main() {
 	}
 
 	fmt.Println("Conectado a la base de datos")
-
-	err = servicios.EliminarRol(db, 4)
-	if err != nil {
-		fmt.Printf("Error eliminando rol: %v\n", err)
-	} else {
-		fmt.Println("Rol eliminado exitosamente")
-	}
 
 }
