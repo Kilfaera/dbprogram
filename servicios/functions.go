@@ -308,11 +308,11 @@ func EliminarMiembro(db *sql.DB, idMiembro int) error {
 	return nil
 }
 
-// func ObtenerMiembroPorDocumentoMovil(db *sql.DB, documento string) error {
+func ObtenerMiembroPorDocumentoMovil(db *sql.DB, documento string) error {
 
-// 	err := db.QueryRow("CALL ObtenerMiembroPorDocumentoMovil(?)", documento)
-// 	if err != nil {
-// 		return fmt.Errorf("error obteniendo miembro por documento: %v", err)
-// 	}
-// 	return nil
-// }
+	err := db.QueryRow("CALL ObtenerMiembroPorDocumentoMovil(?)", documento)
+	if err != nil {
+		return fmt.Errorf("error obteniendo miembro por documento: %v", err)
+	}
+	return nil
+}
