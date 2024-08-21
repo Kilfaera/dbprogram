@@ -3,7 +3,9 @@ package main
 import (
 	"database/sql"
 	"ferryapp/cmd"
+	"ferryapp/servicios"
 	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -24,7 +26,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
 	fmt.Println("Conectado a la base de datos")
+
 
 }
