@@ -1,11 +1,11 @@
 #==============================================================================
-#Rol///////////////////////////////////////////////////////////////////////////
+# Rol ///////////////////////////////////////////////////////////////////////////
 #==============================================================================
 
-Create table Rol(
-	IdRol int auto_increment primary key,
-	Descripcion varchar(50),
-	MenuInicio BIT,
+CREATE TABLE Rol(
+    IdRol INT AUTO_INCREMENT PRIMARY KEY,
+    Descripcion VARCHAR(50),
+    MenuInicio BIT,
     MenuMiembro BIT,
     MenuReporte BIT,
     MenuConfiguracion BIT,
@@ -15,6 +15,140 @@ Create table Rol(
     FechaRegistro DATETIME
 );
 
+#==============================================================================
+# Usuario ///////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Usuario (
+    IdUsuario INT AUTO_INCREMENT PRIMARY KEY,
+    DocumentoUsuario VARCHAR(50),
+    Nombre VARCHAR(100),
+    Salario DECIMAL(10,2),
+    IdRol INT,
+    Correo VARCHAR(50),
+    Contraseña VARCHAR(50),
+    Telefono VARCHAR(50),
+    TelefonoEmergencia VARCHAR(50),
+    Tema VARCHAR(50),
+    Colorenfacis VARCHAR(50),
+    Estado BIT,
+    FechaRegistro DATETIME,
+    FOREIGN KEY (IdRol) REFERENCES Rol(IdRol)
+);
+
+#==============================================================================
+# Proveedor /////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Proveedor(
+    IdProveedor INT AUTO_INCREMENT PRIMARY KEY,
+    Documento VARCHAR(50),
+    RazonSocial VARCHAR(50),
+    Correo VARCHAR(50),
+    Telefono VARCHAR(50),
+    Estado BIT,
+    FechaRegistro DATETIME 
+);
+
+#==============================================================================
+# TipoServicio //////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE TipoServicio(
+    IdServicio INT AUTO_INCREMENT PRIMARY KEY,
+    NombreServicio VARCHAR(100),
+    TiempoServicio VARCHAR(50)
+);
+
+#==============================================================================
+# Categoria /////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Categoria(
+    IdCategoria INT AUTO_INCREMENT PRIMARY KEY, 
+    NombreCategoria VARCHAR(50),
+    Descripcion VARCHAR(50)
+);
+
+#==============================================================================
+# Producto //////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Producto (
+    IdProducto INT AUTO_INCREMENT PRIMARY KEY,
+    IdCategoria INT,
+    NombreProducto VARCHAR(50),
+    Descripcion VARCHAR(50),
+    Stock INT,
+    StockMin INT,
+    ValorProductoCompra DECIMAL(10,2),
+    ValorProductoVenta DECIMAL(10,2),
+    Estado BIT,
+    FOREIGN KEY (IdCategoria) REFERENCES Categoria(IdCategoria)
+);
+
+#==============================================================================
+# Miembro ///////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Miembro (
+    IdMiembro INT AUTO_INCREMENT PRIMARY KEY,
+    DocumentoMiembro VARCHAR(50),
+    NombreMiembro VARCHAR(100),
+    FechaRegistro DATETIME,
+    NumeroAsistencias INT,
+    Correo VARCHAR(50),
+    Telefono VARCHAR(50),
+    TelefonoEmergencia VARCHAR(50),
+    IdServicio INT,
+    FechaCaducidad DATETIME,
+    UltimaRenovacion DATETIME,
+    Estado BIT,
+    Imagen VARCHAR(255),
+    FOREIGN KEY (IdServicio) REFERENCES TipoServicio(IdServicio)
+);
+
+#==============================================================================
+# Gasto /////////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Gasto (
+    IdGasto INT AUTO_INCREMENT PRIMARY KEY,
+    IdProveedor INT,
+    IdUsuario INT,
+    Documento VARCHAR(100),
+    Descripcion VARCHAR(100),
+    MontoTotal DECIMAL(10,2),
+    FormaPago VARCHAR(50),
+    FechaRegistro DATETIME,
+    FOREIGN KEY (IdProveedor) REFERENCES Proveedor(IdProveedor),
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
+);
+
+#==============================================================================
+# Venta /////////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Venta (
+    IdVenta INT AUTO_INCREMENT PRIMARY KEY,
+    IdUsuario INT,
+    IdMiembro INT,
+    Productos TEXT,
+    Cantidad INT,
+    Descripcion VARCHAR(100),
+    FormaPago VARCHAR(50),
+    MontoPago DECIMAL(10,2),
+    MontoCambio DECIMAL(10,2),
+    MontoTotal DECIMAL(10,2),
+    FechaRegistro DATETIME,
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
+    FOREIGN KEY (IdMiembro) REFERENCES Miembro(IdMiembro)
+);
+
+
+#==============================================================================
+#Rol procedures///////////////////////////////////////////////////////////////////////////
+#==============================================================================
 DELIMITER //
 
 CREATE PROCEDURE InsertarRol(
@@ -68,25 +202,8 @@ DELIMITER ;
 
 
 #==============================================================================
-#Usuario///////////////////////////////////////////////////////////////////////
+#Usuario procedures///////////////////////////////////////////////////////////////////////
 #==============================================================================
-CREATE TABLE Usuario (
-    IdUsuario INT AUTO_INCREMENT PRIMARY KEY,
-    DocumentoUsuario VARCHAR(50),
-    Nombre VARCHAR(100),
-    Salario DECIMAL(10,2),
-    IdRol INT,
-    Correo VARCHAR(50),
-    Contraseña VARCHAR(50),
-    Telefono VARCHAR(50),
-    TelefonoEmergencia VARCHAR(50),
-    Tema VARCHAR(50),
-    Colorenfacis VARCHAR(50),
-    Estado BIT,
-    FechaRegistro DATETIME,
-    FOREIGN KEY (IdRol) REFERENCES Rol(IdRol)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarUsuario(
@@ -156,18 +273,8 @@ DELIMITER ;
 
 
 #==============================================================================
-#Proveedor/////////////////////////////////////////////////////////////////////
+#Proveedor procedures/////////////////////////////////////////////////////////////////////
 #==============================================================================
-Create table Proveedor(
-	IdProveedor int auto_increment key ,
-	Documento varchar(50),
-	RazonSocial varchar(50),
-	Correo varchar(50),
-	Telefono varchar(50),
-	Estado bit,
-	FechaRegistro datetime 
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarProveedor(
@@ -211,14 +318,8 @@ END //
 DELIMITER ;
 
 #==============================================================================
-#TipoServicio//////////////////////////////////////////////////////////////////
+#TipoServicio procedures//////////////////////////////////////////////////////////////////
 #==============================================================================
-Create table TipoServicio(
-	IdServicio int auto_increment primary key ,
-	NombreServicio varchar (100),
-	TiempoServicio varchar(50)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarTipoServicio(
@@ -254,14 +355,8 @@ DELIMITER ;
 
 
 #==============================================================================
-#Categoria/////////////////////////////////////////////////////////////////////
+#Categoria procedures/////////////////////////////////////////////////////////////////////
 #==============================================================================
-Create table Categoria(
-	IdCategoria INT AUTO_INCREMENT PRIMARY KEY, 
-	NombreCategoria varchar(50),
-	Descripcion varchar(50)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarCategoria(
@@ -296,20 +391,8 @@ END //
 DELIMITER ;
 
 #==============================================================================
-#Producto//////////////////////////////////////////////////////////////////////
+#Producto procedures//////////////////////////////////////////////////////////////////////
 #==============================================================================
-CREATE TABLE Producto (
-    IdProducto INT AUTO_INCREMENT PRIMARY KEY,
-    IdCategoria INT,
-    NombreProducto VARCHAR(50),
-    Descripcion VARCHAR(50),
-    Stock INT,
-    StockMin int,
-    ValorProductoCompra DECIMAL(10,2),
-    ValorProductoVenta DECIMAL(10,2),
-    Estado BIT,
-    FOREIGN KEY (IdCategoria) REFERENCES Categoria(IdCategoria)
-);
 
 DELIMITER //
 
@@ -371,25 +454,8 @@ DELIMITER ;
 
 
 #==============================================================================
-#Miembro///////////////////////////////////////////////////////////////////////
+#Miembro procedures///////////////////////////////////////////////////////////////////////
 #==============================================================================
-CREATE TABLE Miembro (
-    IdMiembro INT AUTO_INCREMENT PRIMARY KEY,
-    DocumentoMiembro VARCHAR(50),
-    NombreMiembro VARCHAR(100),
-    FechaRegistro DATETIME,
-    NumeroAsistencias INT,
-    Correo VARCHAR(50),
-    Telefono VARCHAR(50),
-    TelefonoEmergencia VARCHAR(50),
-    IdServicio INT,
-    FechaCaducidad DATETIME,
-    UltimaRenovacion DATETIME,
-    Estado BIT,
-    Imagen VARCHAR(255),
-    FOREIGN KEY (IdServicio) REFERENCES TipoServicio(IdServicio)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarMiembro(
@@ -469,21 +535,8 @@ END //
 DELIMITER ;
 
 #==============================================================================
-#Gasto/////////////////////////////////////////////////////////////////////////
+#Gasto procedures/////////////////////////////////////////////////////////////////////////
 #==============================================================================
-CREATE TABLE Gasto (
-    IdGasto INT AUTO_INCREMENT PRIMARY KEY,
-    IdProveedor INT,
-    IdUsuario INT,
-    Documento VARCHAR(100),
-    Descripcion VARCHAR(100),
-    MontoTotal DECIMAL(10,2),
-    FormaPago VARCHAR(50),
-    FechaRegistro DATETIME,
-    FOREIGN KEY (IdProveedor) REFERENCES Proveedor(IdProveedor),
-    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarGasto(
@@ -539,24 +592,8 @@ DELIMITER ;
 
 
 #==============================================================================
-#Venta/////////////////////////////////////////////////////////////////////////
+#Venta procedures/////////////////////////////////////////////////////////////////////////
 #==============================================================================
-CREATE TABLE Venta (
-    IdVenta INT AUTO_INCREMENT PRIMARY KEY,
-    IdUsuario INT,
-    IdMiembro INT,
-    Productos text,
-    Cantidad INT,
-    Descripcion VARCHAR(100),
-    FormaPago VARCHAR(50),
-    MontoPago DECIMAL(10,2),
-    MontoCambio DECIMAL(10,2),
-    MontoTotal DECIMAL(10,2),
-    FechaRegistro DATETIME,
-    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
-    FOREIGN KEY (IdMiembro) REFERENCES Miembro(IdMiembro)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarVenta(
@@ -632,20 +669,8 @@ DELIMITER ;
 
 
 #==============================================================================
-#AsistenciaMiembro/////////////////////////////////////////////////////////////
+#AsistenciaMiembro procedures/////////////////////////////////////////////////////////////
 #==============================================================================
-CREATE TABLE AsistenciaMiembro (
-    IdAsistenciaMiembro INT AUTO_INCREMENT PRIMARY KEY,
-    IdMiembro INT,
-    IdUsuario int,
-    nota TEXT,
-    FechaRegistro DATETIME,
-    IdServicio INT,
-    FOREIGN KEY (IdMiembro) REFERENCES Miembro(IdMiembro),
-    FOREIGN KEY (IdServicio) REFERENCES TipoServicio(IdServicio),
-    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarAsistenciaMiembro(
@@ -708,20 +733,8 @@ END //
 DELIMITER ;
 
 #==============================================================================
-#Novedad///////////////////////////////////////////////////////////////////////
+#Novedad procedures///////////////////////////////////////////////////////////////////////
 #==============================================================================
-
-CREATE TABLE Novedad (
-    IdNovedad INT AUTO_INCREMENT PRIMARY KEY,
-    Titulo TEXT,
-    Texto TEXT,
-    FechaRegistro DATETIME,
-    FechaExpiracion DATETIME,
-    Imagen VARCHAR(255),
-    IdUsuario int,
-    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarNovedad(
@@ -770,17 +783,8 @@ DELIMITER ;
 
 
 #==============================================================================
-#Notificacion///////////////////////////////////////////////////////////////////////
+#Notificacion procedures///////////////////////////////////////////////////////////////////////
 #==============================================================================
-CREATE TABLE Notificacion (
-    IdNotificacion INT AUTO_INCREMENT PRIMARY KEY,
-    Titulo TEXT,
-    Texto TEXT,
-    FechaRegistro DATETIME,
-    Destinatario int,
-    Estado bit
-);
-
 DELIMITER //
 
 CREATE PROCEDURE InsertarNotificacion(
