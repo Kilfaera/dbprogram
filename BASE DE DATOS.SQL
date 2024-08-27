@@ -145,6 +145,47 @@ CREATE TABLE Venta (
     FOREIGN KEY (IdMiembro) REFERENCES Miembro(IdMiembro)
 );
 
+#==============================================================================
+#AsistenciaMiembro/////////////////////////////////////////////////////////////
+#==============================================================================
+CREATE TABLE AsistenciaMiembro (
+    IdAsistenciaMiembro INT AUTO_INCREMENT PRIMARY KEY,
+    IdMiembro INT,
+    IdUsuario int,
+    nota TEXT,
+    FechaRegistro DATETIME,
+    IdServicio INT,
+    FOREIGN KEY (IdMiembro) REFERENCES Miembro(IdMiembro),
+    FOREIGN KEY (IdServicio) REFERENCES TipoServicio(IdServicio),
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
+);
+
+#==============================================================================
+#Novedad///////////////////////////////////////////////////////////////////////
+#==============================================================================
+
+CREATE TABLE Novedad (
+    IdNovedad INT AUTO_INCREMENT PRIMARY KEY,
+    Titulo TEXT,
+    Texto TEXT,
+    FechaRegistro DATETIME,
+    FechaExpiracion DATETIME,
+    Imagen VARCHAR(255),
+    IdUsuario int,
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
+);
+
+#==============================================================================
+#Notificacion///////////////////////////////////////////////////////////////////////
+#==============================================================================
+CREATE TABLE Notificacion (
+    IdNotificacion INT AUTO_INCREMENT PRIMARY KEY,
+    Titulo TEXT,
+    Texto TEXT,
+    FechaRegistro DATETIME,
+    Destinatario int,
+    Estado bit
+);
 
 #==============================================================================
 #Rol procedures///////////////////////////////////////////////////////////////////////////
