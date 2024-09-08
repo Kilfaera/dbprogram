@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"ferryapp/cmd"
-	"ferryapp/servicios"
 	"fmt"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -30,5 +30,10 @@ func main() {
 
 	fmt.Println("Conectado a la base de datos")
 
-
+	re, err := db.Exec("CALL InsertarCategoria(?, ?)", "categoria 7", true)
+	if err != nil {
+		log.Printf("error insertando: %v", err)
+		return
+	}
+	fmt.Println(re)
 }

@@ -909,4 +909,3 @@ CALL InsertarNotificacion('Notificación B', 'Texto B', '87654321', 1);
 call ObtenerUsuariosConRoles();
 call ObtenerMiembroPorDocumentoMovil('12345678');
 call ObtenerAsistenciasConMiembroUsuarioYServicio();
-
