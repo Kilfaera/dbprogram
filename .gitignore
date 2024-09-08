@@ -24,3 +24,4 @@ config.json
 
 # env file
 .env
+config.json
